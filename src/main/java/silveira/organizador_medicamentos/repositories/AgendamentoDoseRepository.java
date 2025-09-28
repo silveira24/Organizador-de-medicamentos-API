@@ -16,6 +16,6 @@ public interface AgendamentoDoseRepository extends JpaRepository<AgendamentoDose
     List<AgendamentoDose> findByDataDoseOrderByHorarioPrevistoAsc(LocalDate dataDose);
     List<AgendamentoDose> findByDataDoseAndStatusDoseOrderByHorarioPrevistoAsc(LocalDate dataDose, StatusDose status);
 
-    List<AgendamentoDose> findByMedicamentoIdAndDataDoseAfterOrderByDataDoseAscHorarioPrevistoAsc(Integer medicamentoId, LocalDate dataAtual);
+     List<AgendamentoDose> findByMedicamentoIdAndDataDoseGreaterThanEqualAndStatusDose(Integer medicamentoId, LocalDate data, StatusDose statusDose);
 
 }

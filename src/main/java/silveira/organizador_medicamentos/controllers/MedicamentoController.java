@@ -65,8 +65,8 @@ public class MedicamentoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarMedicamento(@PathVariable Integer id){
         if (medicamentoService.buscarPorId(id).isPresent()) {
-            medicamentoService.deletar(id);
             agendamentoDoseService.excluirAgendamentosFuturos(id);
+            medicamentoService.deletar(id);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

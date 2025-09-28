@@ -27,4 +27,7 @@ public class Medicamento {
     @Column(nullable = false)
     private String horariosPadrao;
 
+    @Column(nullable = false)
+    private Boolean ativo = true;
+
 }

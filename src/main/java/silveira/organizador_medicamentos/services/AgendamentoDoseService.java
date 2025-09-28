@@ -56,13 +56,13 @@ public class AgendamentoDoseService {
     }
 
     public List<AgendamentoDose> buscarAgendamentosFuturos(Integer medicamentoId) {
-        return agendamentoDoseRepository.findByMedicamentoIdAndDataDoseAfterOrderByDataDoseAscHorarioPrevistoAsc(medicamentoId, LocalDate.now().minusDays(1));
+        return agendamentoDoseRepository.findByMedicamentoIdAndDataDoseGreaterThanEqualAndStatusDose(medicamentoId, LocalDate.now(), StatusDose.PENDENTE);
     }
 
     public Optional<Void> excluirAgendamentosFuturos(Integer medicamentoId) {
         try {
             List<AgendamentoDose> agendamentosFuturos = agendamentoDoseRepository
-                    .findByMedicamentoIdAndDataDoseAfterOrderByDataDoseAscHorarioPrevistoAsc(medicamentoId, LocalDate.now().minusDays(1));
+                    .findByMedicamentoIdAndDataDoseGreaterThanEqualAndStatusDose(medicamentoId, LocalDate.now(), StatusDose.PENDENTE);
 
             agendamentoDoseRepository.deleteAll(agendamentosFuturos);
             return Optional.empty();

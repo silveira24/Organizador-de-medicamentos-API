@@ -4,6 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import silveira.organizador_medicamentos.model.Medicamento;
 
+import java.util.List;
+
 @Repository
 public interface MedicamentoRepository extends JpaRepository<Medicamento, Integer> {
+    List<Medicamento> findByAtivoTrue();
 }

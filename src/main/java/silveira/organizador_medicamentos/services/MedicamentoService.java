@@ -22,11 +22,15 @@ public class MedicamentoService {
     }
 
     public List<Medicamento> buscarTodos() {
-        return medicamentoRepository.findAll();
+        return medicamentoRepository.findByAtivoTrue();
     }
 
-    public void deletar(Integer id) {
-        medicamentoRepository.deleteById(id);
+    public Optional<Medicamento> deletar(Integer id) {
+        return medicamentoRepository.findById(id)
+                .map(medicamento -> {
+                    medicamento.setAtivo(false);
+                    return medicamentoRepository.save(medicamento);
+                });
     }
 
 }
