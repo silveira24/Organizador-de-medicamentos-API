@@ -55,6 +55,23 @@ public class AgendamentoDoseService {
         return horarios;
     }
 
+    public List<AgendamentoDose> buscarAgendamentosFuturos(Integer medicamentoId) {
+        return agendamentoDoseRepository.findByMedicamentoIdAndDataDoseAfterOrderByDataDoseAscHorarioPrevistoAsc(medicamentoId, LocalDate.now().minusDays(1));
+    }
+
+    public Optional<Void> excluirAgendamentosFuturos(Integer medicamentoId) {
+        try {
+            List<AgendamentoDose> agendamentosFuturos = agendamentoDoseRepository
+                    .findByMedicamentoIdAndDataDoseAfterOrderByDataDoseAscHorarioPrevistoAsc(medicamentoId, LocalDate.now().minusDays(1));
+
+            agendamentoDoseRepository.deleteAll(agendamentosFuturos);
+            return Optional.empty();
+        } catch (Exception e) {
+            System.err.println("Erro ao excluir agendamentos futuros: " + e.getMessage());
+            return Optional.ofNullable(null);
+        }
+    }
+
     public Optional<AgendamentoDose> marcarDoseTomada(Integer id) {
         Optional<AgendamentoDose> agendamento = agendamentoDoseRepository.findById(id);
 
@@ -62,7 +79,7 @@ public class AgendamentoDoseService {
             AgendamentoDose dose = agendamento.get();
 
             if (dose.getStatusDose() != StatusDose.TOMADA) {
-                dose.setStatusDose(StatusDose.PENDENTE);
+                dose.setStatusDose(StatusDose.TOMADA);
                 dose.setHorarioReal(LocalDateTime.now());
                 return Optional.of(agendamentoDoseRepository.save(dose));
             }
@@ -74,5 +91,8 @@ public class AgendamentoDoseService {
         return agendamentoDoseRepository.findByDataDoseOrderByHorarioPrevistoAsc(data);
     }
 
+    public List<AgendamentoDose> buscarPorDataEStatus(LocalDate data, StatusDose status) {
+        return agendamentoDoseRepository.findByDataDoseAndStatusDoseOrderByHorarioPrevistoAsc(data, status);
+    }
 
 }

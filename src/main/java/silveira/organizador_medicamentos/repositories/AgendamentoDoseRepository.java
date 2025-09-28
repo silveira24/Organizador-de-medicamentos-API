@@ -3,6 +3,8 @@ package silveira.organizador_medicamentos.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import silveira.organizador_medicamentos.model.AgendamentoDose;
+import silveira.organizador_medicamentos.model.Medicamento;
+import silveira.organizador_medicamentos.model.StatusDose;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,4 +14,8 @@ public interface AgendamentoDoseRepository extends JpaRepository<AgendamentoDose
     List<AgendamentoDose> findByMedicamentoIdAndDataDoseOrderByHorarioPrevistoAsc(Integer medicamentoId, LocalDate dataDose);
 
     List<AgendamentoDose> findByDataDoseOrderByHorarioPrevistoAsc(LocalDate dataDose);
+    List<AgendamentoDose> findByDataDoseAndStatusDoseOrderByHorarioPrevistoAsc(LocalDate dataDose, StatusDose status);
+
+    List<AgendamentoDose> findByMedicamentoIdAndDataDoseAfterOrderByDataDoseAscHorarioPrevistoAsc(Integer medicamentoId, LocalDate dataAtual);
+
 }

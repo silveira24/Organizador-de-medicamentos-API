@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import silveira.organizador_medicamentos.model.Medicamento;
+import silveira.organizador_medicamentos.services.AgendamentoDoseService;
 import silveira.organizador_medicamentos.services.MedicamentoService;
 
 import java.util.List;
@@ -18,9 +19,13 @@ public class MedicamentoController {
     @Autowired
     private MedicamentoService  medicamentoService;
 
+    @Autowired
+    private AgendamentoDoseService agendamentoDoseService;
+
     @PostMapping
     public ResponseEntity<Medicamento> criarMedicamento(@RequestBody Medicamento medicamento){
         Medicamento novoMedicamento = medicamentoService.salvar(medicamento);
+        agendamentoDoseService.gerarAgendamentosIniciais(novoMedicamento);
         return new ResponseEntity<>(novoMedicamento, HttpStatus.CREATED);
     }
 
@@ -48,6 +53,10 @@ public class MedicamentoController {
                     medicamentoExistente.setHorariosPadrao(medicamento.getHorariosPadrao());
 
                     Medicamento atualizado = medicamentoService.salvar(medicamentoExistente);
+
+                    agendamentoDoseService.excluirAgendamentosFuturos(id);
+                    agendamentoDoseService.gerarAgendamentosIniciais(atualizado);
+
                     return ResponseEntity.ok(atualizado);
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -57,6 +66,7 @@ public class MedicamentoController {
     public ResponseEntity<Void> deletarMedicamento(@PathVariable Integer id){
         if (medicamentoService.buscarPorId(id).isPresent()) {
             medicamentoService.deletar(id);
+            agendamentoDoseService.excluirAgendamentosFuturos(id);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
