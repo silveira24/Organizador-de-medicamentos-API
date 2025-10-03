@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/agendamentos")
-@CrossOrigin(origins = "https://localhost:3000")
+@CrossOrigin(origins = "https://localhost:5173")
 public class AgendamentoDosesController {
     @Autowired
     private AgendamentoDoseService agendamentoDoseService;
