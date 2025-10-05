@@ -87,6 +87,21 @@ public class AgendamentoDoseService {
         return Optional.empty();
     }
 
+    public Optional<AgendamentoDose> desmarcarDoseTomada(Integer id) {
+        Optional<AgendamentoDose> agendamento = agendamentoDoseRepository.findById(id);
+
+        if (agendamento.isPresent()) {
+            AgendamentoDose dose = agendamento.get();
+
+            if (dose.getStatusDose() == StatusDose.TOMADA) {
+                dose.setStatusDose(StatusDose.PENDENTE);
+                dose.setHorarioReal(null);
+                return Optional.of(agendamentoDoseRepository.save(dose));
+            }
+        }
+        return Optional.empty();
+    }
+
     public List<AgendamentoDose> buscarPorData(LocalDate data) {
         return agendamentoDoseRepository.findByDataDoseOrderByHorarioPrevistoAsc(data);
     }

@@ -45,4 +45,11 @@ public class AgendamentoDosesController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}/desmarcar")
+    public ResponseEntity<AgendamentoDose> desmarcarDoseTomada(@PathVariable Integer id) {
+        return agendamentoDoseService.desmarcarDoseTomada(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }
